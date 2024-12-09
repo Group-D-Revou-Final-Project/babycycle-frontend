@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
         className="absolute right-3 top-1/2 transform -translate-y-1/2"
       >
         <Image
-          src="/assets/search.png"
+          src="/search.png"
           alt="Search Icon"
           width={50}
           height={50}
@@ -35,7 +35,7 @@ const Navbar: React.FC = () => {
   ) : (
     <button onClick={() => setIsSearchActive(true)}>
       <Image
-        src="/assets/search.png"
+        src="/search.png"
         alt="Search Icon"
         width={50}
         height={50}
@@ -50,7 +50,7 @@ const Navbar: React.FC = () => {
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <Link href="/">
             <Image
-              src="/assets/logo_main.png"
+              src="/logo_main.png"
               alt="Babycycle Logo"
               width={177}
               height={94}
@@ -65,7 +65,7 @@ const Navbar: React.FC = () => {
           <div className="relative group">
             <button>
               <Image
-                src="/assets/login.png"
+                src="/login.png"
                 alt="Login Icon"
                 width={50}
                 height={50}
@@ -85,7 +85,7 @@ const Navbar: React.FC = () => {
           {/* Cart Icon */}
           <Link href="/cart">
             <Image
-              src="/assets/cart.png"
+              src="/cart.png"
               alt="Cart Icon"
               width={50}
               height={50}
