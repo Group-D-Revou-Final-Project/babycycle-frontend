@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { API_RESEND_VERIF, API_VERIFY } from '@/constants/api';
 
 export default function VerifyEmailStep2() {
   const router = useRouter();
-  const [otp, setOtp] = useState('');
+  const [VerificationCode, setVerificationCode] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -13,7 +14,7 @@ export default function VerifyEmailStep2() {
     setLoading(true);
     try {
       const { email } = router.query; // Assume email is passed via query params
-      await axios.post('/api/verify-otp', { otp, email }); // Replace with your API endpoint
+      await axios.post(API_VERIFY, {verification_code : VerificationCode, email }); // Replace with your API endpoint
       setMessage('Your email has been verified!');
     } catch (error: any) {
       setMessage(error.response?.data?.message || 'Invalid OTP');
@@ -25,7 +26,7 @@ export default function VerifyEmailStep2() {
   const handleResendOTP = async () => {
     try {
       const { email } = router.query;
-      await axios.post('/api/send-otp', { email }); // Replace with your API endpoint
+      await axios.post(API_RESEND_VERIF, { email }); // Replace with your API endpoint
       setMessage('A new OTP has been sent to your email!');
     } catch (error: any) {
       setMessage(error.response?.data?.message || 'An error occurred while resending OTP');
@@ -40,8 +41,8 @@ export default function VerifyEmailStep2() {
           <input
             type="text"
             placeholder="Enter OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
+            value={VerificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
             required
             className="w-full p-3 border rounded mb-4"
           />

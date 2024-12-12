@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { API_VERIF_REGIS } from '@/constants/api';
 
 export default function VerifyEmailStep1() {
   const [email, setEmail] = useState('');
@@ -10,7 +11,7 @@ export default function VerifyEmailStep1() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('https://api.babycycle.my.id/api/v1/users/login', { email }); // Replace with your API endpoint
+      await axios.post(API_VERIF_REGIS, { email }); // Replace with your API endpoint
       setMessage('OTP has been sent to your email!');
     } catch (error: any) {
       setMessage(error.response?.data?.message || 'An error occurred');
