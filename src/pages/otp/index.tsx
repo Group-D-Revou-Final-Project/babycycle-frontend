@@ -15,13 +15,14 @@ export default function VerifyEmailRouter() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <p>Invalid step. Please navigate to a valid step.</p>
-      <Link href="/?step=1">
-        <a className="text-blue-500">Go to Step 1</a>
-      </Link>
-    </div>
-  );
+  <div className="min-h-screen flex items-center justify-center">
+    <p>Invalid step. Please navigate to a valid step.</p>
+    <Link href="/?step=1" className="text-blue-500">
+      Go to Step 1
+    </Link>
+  </div>
+);
+
 }
 
 function VerifyEmailStep1() {
