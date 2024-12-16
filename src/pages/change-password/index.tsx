@@ -23,7 +23,7 @@ const ChangePassword: React.FC = () => {
 
     try {
       // Call the Baby Cycle API
-      const response = await fetch("https://api.babycycle.my.id/reset-password", {
+      const response = await fetch("https://api.babycycle.my.id/api/v1/users/forgot-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
