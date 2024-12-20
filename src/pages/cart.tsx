@@ -117,6 +117,7 @@ const CartPage: React.FC = () => {
       const checkoutPayload = {
         checkout_id: checkoutId,
         payment_method: paymentMethod,
+        product_id: cartData[0].product_id,
       };
 
       const checkoutResponse = await fetch(API_CHECKOUT, {
