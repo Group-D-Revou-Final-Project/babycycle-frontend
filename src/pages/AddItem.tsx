@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSnackbar } from "notistack";
 import { useAuth } from "@/context/AuthContext";
-import { API_URL } from "@/constants/apis";
+import { API_URL, API_URL_LOCAL } from "@/constants/apis";
 import axios from "axios";
 
 const ListingForm: React.FC = () => {
@@ -186,12 +186,16 @@ const ListingForm: React.FC = () => {
         const discountPayload = {
           product_id: createdProduct.id,
           discount_percentage: parseFloat(productDetails.discount),
-          start_date: productDetails.startDate,
-          end_date: productDetails.endDate,
+          start_date: productDetails.startDate || null,
+          end_date: productDetails.endDate || null,
+          // start_date: '',
+          // end_date: '',
           is_active: true,
         };
 
-        const discountResponse = await fetch(`${API_URL}/discount`, {
+        console.log('discount payload',discountPayload);
+
+        const discountResponse = await fetch(`${API_URL_LOCAL}/discount/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -199,6 +203,8 @@ const ListingForm: React.FC = () => {
           },
           body: JSON.stringify(discountPayload),
         });
+
+        console.log('discount response',discountResponse);
 
         if (!discountResponse.ok) {
           enqueueSnackbar("Failed to add discount. Please try again.", {
