@@ -6,7 +6,9 @@ import { useAuth } from "@/context/AuthContext";
 import { API_CHECKOUT, API_CHECKOUT_VALIDATION, API_CHECKOUT_ITEM, API_CARTS_CLEAR } from "@/constants/apis";
 import { formattedDate } from "@/utils/getCheckoutTimestamp";
 import { AddressModel } from "@/models/Address";
+import { ProductModel } from "@/models/Product";
 import { useSnackbar } from "notistack";
+
 
 const CartPage: React.FC = () => {
   const cartContext = useContext(CartContext);
@@ -18,6 +20,8 @@ const CartPage: React.FC = () => {
   }
 
   const { cart, removeFromCart, increaseQuantity, decreaseQuantity, clearCart } = cartContext;
+  const [products, setProducts] = useState<ProductModel[]>([]);
+
 
   const [selectedAddress, setSelectedAddress] = useState<AddressModel>();
   const [selectedCardType, setSelectedCardType] = useState<string | null>(null);
@@ -37,6 +41,16 @@ const CartPage: React.FC = () => {
   }
 
   // const [dataTemp, setDataTemp] = useState<any[]>([]);
+// Fetch product data
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(API_PRODUCTS); // Fetch all products
+      const data: ProductModel[] = await response.json();
+      setProducts(data);
+    } catch (error) {
+      enqueueSnackbar("Failed to fetch product details.", { variant: "error" });
+    }
+  };
 
   useEffect(() => {
     const addressFromStorage = JSON.parse(localStorage.getItem("selectedAddress") || "{}");
@@ -219,7 +233,7 @@ const CartPage: React.FC = () => {
                     <div className="flex items-center gap-x-4 w-full sm:w-1/2">
                       <Link href={`/product/${item.product_id}`} passHref>
                         <Image
-                          src="/assets/placeholder_image.jpg"
+                          src={item.image_url || "/assets/placeholder_image.jpg"}
                           alt="Product Image"
                           width={80}
                           height={80}

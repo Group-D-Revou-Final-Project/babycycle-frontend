@@ -106,7 +106,6 @@ const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({
 
       // addToCart(productData);
       fetchCart();
-      router.push("/cart");
 
       // addToCart({
       //   id: product.id.toString(),

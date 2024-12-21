@@ -137,7 +137,7 @@ const SellerDashboard: React.FC = () => {
 
           try {
             // Fetch discount
-            const discountResponse = await fetch(`${API_URL}/api/v1/discount/${product.id}`, {
+            const discountResponse = await fetch(`${API_URL}/discounts/${product.id}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
