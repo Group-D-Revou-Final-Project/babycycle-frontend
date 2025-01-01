@@ -42,11 +42,6 @@ const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({
       const review = response_review.ok ? await response_review.json() : [];
       setReview(review);
 
-      // if (Array.isArray(review)) {
-      //   setReview(review);
-      // } else {
-      //   setReview([]);
-      // }
     } catch {
       enqueueSnackbar("Failed to fetch review.", {
         variant: "error",
@@ -108,13 +103,6 @@ const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({
       fetchCart();
       router.push("/cart");
 
-      // addToCart({
-      //   id: product.id.toString(),
-      //   name: product.name,
-      //   price: discountedPrice,
-      //   quantity: 1,
-      // });
-
       enqueueSnackbar("Product has been added to the cart!", {
         variant: "success",
       });
@@ -127,14 +115,7 @@ const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({
 
   const handleBuyNow = () => {
     try {
-      // addToCart({
-      //   id: product.id.toString(),
-      //   name: product.name,
-      //   total_price: discountedPrice,
-      //   quantity: 1,
-      // });
-
-      // router.push("/cart");
+    
       window.location.href = "/cart";
 
       enqueueSnackbar("Product added to cart. Proceeding to checkout.", {
@@ -211,7 +192,7 @@ const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({
           </div>
 
           {/* Warranty and Category */}
-          <div className="flex justify-center lg:justify-start space-x-4 mb-4">
+          <div className="flex justify-center lg:justify-start space-x-4 mb-4 mobile:justify-start">
             {product.is_warranty && (
               <span className="text-label-md bg-green-500 px-4 py-2 uppercase text-white">
                 Warranty
@@ -223,7 +204,7 @@ const ProductDetailsPage: React.FC<ProductDetailsPageProps> = ({
           </div>
 
           {/* Buttons */}
-          <div className="flex flex-col lg:items-start md:items-center sm:items-center space-y-4 py-10">
+          <div className="flex flex-col lg:items-start md:items-center sm:items-center space-y-4 py-10 mobile:items-center">
             <button
               className="btn-add-to-cart w-2/3 "
               onClick={handleAddToCart}

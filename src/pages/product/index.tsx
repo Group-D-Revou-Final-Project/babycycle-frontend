@@ -195,7 +195,7 @@ const ProductListing = () => {
     return () => {
       window.removeEventListener("resize", updatePaginationLimit);
     };
-  }, []);
+  }, [offset]);
 
   const totalPages = Math.ceil((filteredData?.data.length || fetchedData.length) / limitPagination);
   const currentPage = Math.floor(offset / limitPagination) + 1;

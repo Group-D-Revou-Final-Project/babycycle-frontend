@@ -30,6 +30,8 @@ const UserDashboard = () => {
         email: user?.data.email || "",
         phone: user?.data.phone || "",
       });
+    
+    const [mobileView, setMobileView] = useState(false);
 
     const router = useRouter()
 
@@ -48,6 +50,7 @@ const UserDashboard = () => {
 
     const [addressListData, setAddressListData] = useState<DataWithCount<AddressModel> | undefined>()
 
+    
     const handleFileChange: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0]; // Get the selected file directly
@@ -444,8 +447,34 @@ const UserDashboard = () => {
     router.push(`/seller-dashboard`)
     }
 
-  return (
-    <div className='body-width mb-[72px] max-md:w-full max-md:px-8'>
+    // const renderMobileDashboard = () => {
+    //     return(
+
+    //         <div>
+    //             <p className='text-2xl font-bold'> This is mobile view</p>
+    //         </div>
+    //     )
+    // }
+      
+    useEffect(() => {
+        // Check window size on mount
+        setMobileView(window.innerWidth < 500);
+        console.log("Initial window width:", window.innerWidth);
+    
+        const handleResize = () => {
+          setMobileView(window.innerWidth < 500);
+          console.log("Current window width:", window.innerWidth);
+        };
+    
+        window.addEventListener("resize", handleResize);
+    
+        return () => {
+          window.removeEventListener("resize", handleResize);
+          console.log('mobile view', mobileView, window.innerWidth);
+        };
+      }, [mobileView]);
+
+  return ( <div className='body-width mb-[72px] max-md:w-full max-md:px-8 mobile:w-[500px]'>
         <div className='w-full flex justify-between items-center'>
             <div className='py-6'>
                 <span className='text-3xl text-buttonBlue'>Hello, {user?.data.username!== null ? user?.data.username : 'You'}!</span>
@@ -460,15 +489,32 @@ const UserDashboard = () => {
         </div>
         
             <div className='h-auto border-[1px] rounded-[20px] border-buttonBlue'>
-            
-                <div className='flex gap-14 px-6 py-8 text-2xl text-buttonBlue'>
-                    <span className={`cursor-pointer ${activeTab === 'personalData'? 'text-black font-bold' : '' }`} onClick={() => handleTabClick('personalData')}>Personal Data</span>
-                    <span className={`cursor-pointer ${activeTab === 'addressList'? 'text-black font-bold' : '' }`} onClick={() => handleTabClick('addressList')}>Address List</span>
-                    <span className={`cursor-pointer ${activeTab === 'transactionHistory'? 'text-black font-bold' : '' }`} onClick={() => handleTabClick('transactionHistory')}>Transaction History</span>
-                    {user?.data.is_seller === false ? <span className={`cursor-pointer ${activeTab === 'becomeSeller'? 'text-black font-bold' : '' }`} onClick={() => handleTabClick('becomeSeller')}>Become a Seller</span> : null}
-                </div>
+                {mobileView ? (
+                    <div className="px-6 py-8 text-2xl text-buttonBlue">
+                        <select
+                            name="tab"
+                            className="w-full p-2 border border-gray-300 rounded-lg text-xl"
+                            value={activeTab}
+                            onChange={(e) => handleTabClick(e.target.value)}
+                        >
+                            <option value="personalData">Personal Data</option>
+                            <option value="addressList">Address List</option>
+                            <option value="transactionHistory">Transaction History</option>
+                            {user?.data.is_seller === false && (
+                                <option value="becomeSeller">Become a Seller</option>
+                            )}
+                        </select>
+                    </div>
+
+                ) : (
+                    <div className='flex gap-14 px-6 py-8 text-2xl text-buttonBlue'>
+                        <span className={`cursor-pointer ${activeTab === 'personalData'? 'text-black font-bold' : '' }`} onClick={() => handleTabClick('personalData')}>Personal Data</span>
+                        <span className={`cursor-pointer ${activeTab === 'addressList'? 'text-black font-bold' : '' }`} onClick={() => handleTabClick('addressList')}>Address List</span>
+                        <span className={`cursor-pointer ${activeTab === 'transactionHistory'? 'text-black font-bold' : '' }`} onClick={() => handleTabClick('transactionHistory')}>Transaction History</span>
+                        {user?.data.is_seller === false ? <span className={`cursor-pointer ${activeTab === 'becomeSeller'? 'text-black font-bold' : '' }`} onClick={() => handleTabClick('becomeSeller')}>Become a Seller</span> : null}
+                    </div>                    
+                )}
                 
-            
             <hr className='h-[3px] bg-buttonBlue'></hr>
 
             {activeTab === 'personalData' && (
@@ -481,15 +527,15 @@ const UserDashboard = () => {
                     <div className="flex flex-col space-y-4 w-full lg:w-1/2">
                         {/* Main Image */}
                         <div
-                            className="bg-gray-300 relative max-w-[600] flex justify-center items-center cursor-pointer hover:bg-gray-400 rounded-lg min-h-[500] min-w-[500]"
+                            className="bg-gray-300 relative max-w-[600] flex justify-center items-center cursor-pointer hover:bg-gray-400 rounded-lg min-h-[500] min-w-[500] mobile:min-w-[100px] mobile:min-h-[130px] mobile:rounded-lg"
                             onClick={handlePromptUpload}
                             >
                         {images ? (
-                            <div className="relative w-full h-full">
+                            <div className="relative w-full h-full ">
                             <img
                                 src={URL.createObjectURL(images)} // Display the selected image
                                 alt=""
-                                className="w-full h-full object-cover rounded-lg"
+                                className="w-full h-full object-cover rounded-lg mobile:rounded-lg"
                             />
                             <button
                                 className="absolute bottom-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
@@ -504,7 +550,7 @@ const UserDashboard = () => {
                         ) : user?.data.profile_image ? (
                             <img
                                 src={user?.data.profile_image} // Display the selected image
-                                className="w-full h-full object-cover rounded-lg"
+                                className="w-full h-full object-cover rounded-lg mobile:rounded-lg"
                             />
                         ) :(
                             <p className="text-gray-500 text-lg">Select photos</p>
@@ -521,24 +567,38 @@ const UserDashboard = () => {
 
                     <div className='w-3/5 flex flex-col justify-between'>
                         <div className='w-full flex'>
-                            <div className='w-1/3 flex flex-col uppercase text-xl p-6 gap-8'>
+                            <div className='w-1/3 flex flex-col uppercase text-xl p-6 gap-8 mobile:text-sm mobile:p-4 mobile:gap-4'>
                                 <span>Name</span>
                                 <span>Email</span>
                                 <span>Phone Number</span>
                             </div>
-                            <div className='w-2/4 flex flex-col text-xl p-6 gap-8'>
+                            <div className='w-2/4 flex flex-col text-xl p-6 gap-8 mobile:text-sm mobile:p-4 mobile:gap-4'>
                                 <span>{user?.data.username !== null ? user?.data.username : '-'}</span>
-                                <span>{user?.data.email !== null ? user?.data.email : '-'}</span>
+                                <span className='overflow-hidden'>{user?.data.email !== null ? user?.data.email : '-'}</span>
                                 <span>{user?.data.phone !== null ? user?.data.phone : '-'}</span>
                             </div>
                         </div>
-                        <div className='w-full flex justify-end gap-8 text-xl'>
+                        <div className='w-full justify-end flex gap-8 text-xl mobile:text-sm mobile:gap-4 mobile:px-10'>
+                            {!mobileView ? (
+
                             <PrimaryButton 
                                     type='button'
                                     onClick={changeProfileImage}
+                                    className='mobile:border mobile:rounded-full'
                                     >{loading ? 'Loading...' : 'Change Profile Image'}
                             </PrimaryButton>
-                            <PrimaryButton onClick={() => {setShowUserProfileUpdateModal(true)}} type='button'>Change Data</PrimaryButton>
+                            ): (
+                                <PrimaryButton 
+                                    type='button'
+                                    onClick={changeProfileImage}
+                                    className='mobile:border mobile:rounded-full'
+                                    >{loading ? 'Loading...' : 'Change Image'}
+                             </PrimaryButton>
+                            )}
+                            <PrimaryButton 
+                                className='mobile:border mobile:rounded-full'
+                                onClick={() => {setShowUserProfileUpdateModal(true)}} 
+                                type='button'>Change Data</PrimaryButton>
                             {showUserProfileUpdateModal && (
                                 <div className="modal-overlay">
                                     <div className="modal-content-flexible bg-white top-[40%]">
