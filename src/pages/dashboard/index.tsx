@@ -638,8 +638,8 @@ const UserDashboard = () => {
 
                         {showAddressModal && (
                             <div className="modal-overlay">
-                                <div className="modal-content">
-                                    <div className="w-[506px] mx-auto flex flex-col gap-6 text-xl">                                                                                  
+                                <div className="modal-content mobile:w-[300px] mobile:mt-[40%]">
+                                    <div className="w-[506px] mx-auto flex flex-col gap-6 text-xl mobile:text-sm mobile:w-[250px] mobile:gap-4">                                                                                  
                                         <Modals
                                             type='address'
                                             addresses={addresses}
@@ -680,10 +680,12 @@ const UserDashboard = () => {
 
                                 <div className="w-full flex flex-col">
                                     <span className="font-bold">{address.name}</span>
-                                    <span>{address.contact}</span>
+                                    <span className='mobile:font-bold mobile:py-2 mobile:text-blue-500'>{address.contact}</span>
                                     <span>{address.address}</span>
                                 </div>
-                                <div className="w-full flex justify-end gap-3 mobile:w-[120px] mx-auto mobile:justify-between mobile:mt-4">
+                                <div 
+                                className={`${address?.is_main ? 'w-full flex justify-end gap-3 mobile:w-[120px] mx-auto mobile:justify-end mobile:mt-4' : 'w-full flex justify-end gap-3 mobile:w-[120px] mx-auto mobile:justify-between mobile:mt-4'}`}>
+                                
                                     {!mobileView ? (
                                         <PrimaryButton
                                             onClick={() => {
@@ -693,7 +695,7 @@ const UserDashboard = () => {
                                                 }
                                             }}
                                             type="button" 
-                                            className={address?.is_main ? 'btn-disabled mobile:text-sm mobile:border mobile:rounded-full' : ''} 
+                                            className={address?.is_main ? 'btn-disabled' : ''} 
                                             disabled={address?.is_main || updatingAddressId === address?.id} // Disable if already main or updating this address
                                         >
                                             {updatingAddressId === address?.id && loading
@@ -712,6 +714,7 @@ const UserDashboard = () => {
                                                     setAsMain(address.id)
                                                 }
                                             }}
+                                            className={address?.is_main ? 'hidden' : ''}
                                             disabled={address?.is_main || updatingAddressId === address?.id} // Disable if already main or updating this address
                                             buttonFor='confirm'
                                         /> 
@@ -748,8 +751,8 @@ const UserDashboard = () => {
                                     
                                     {showAddressModalEdit && (
                                         <div className="modal-overlay">
-                                            <div className="modal-content">
-                                                <div className="w-[506px] mx-auto flex flex-col gap-6 text-xl">                                                                                  
+                                            <div className="modal-content mobile:w-[300px] mobile:mt-[40%]">
+                                                <div className="w-[506px] mx-auto flex flex-col gap-6 text-xl mobile:text-sm mobile:w-[250px] mobile:gap-4">                                                                                  
                                                     <Modals
                                                         type='address'
                                                         addresses={addresses}

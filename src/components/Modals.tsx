@@ -44,7 +44,7 @@ const Modals: React.FC<ModalsProps> = (props) => {
               <div className="w-full space-y-1">
                 <label className="text-buttonBlue">Name</label>
                 <input
-                  className="w-full h-10 border-2 border-formGray rounded-md"
+                  className="w-full h-10 border-2 border-formGray rounded-md p-2"
                   type="text"
                   name="name"
                   value={address.name}
@@ -54,7 +54,7 @@ const Modals: React.FC<ModalsProps> = (props) => {
               <div className="w-full space-y-1">
                 <label className="text-buttonBlue">Contact</label>
                 <input
-                  className="w-full h-10 border-2 border-formGray rounded-md"
+                  className="w-full h-10 border-2 border-formGray rounded-md p-2"
                   type="text"
                   name="contact"
                   value={address.contact}
@@ -64,7 +64,7 @@ const Modals: React.FC<ModalsProps> = (props) => {
               <div className="w-full space-y-1">
                 <label className="text-buttonBlue">Address</label>
                 <textarea
-                  className="w-full h-40 border-2 border-formGray rounded-md"
+                  className="w-full h-40 border-2 border-formGray rounded-md p-2"
                   name="address"
                   value={address.address}
                   onChange={(e) => props.handleInputChange(index, 'address', e.target.value)}
