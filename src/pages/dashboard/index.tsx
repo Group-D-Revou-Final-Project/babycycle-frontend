@@ -13,12 +13,14 @@ import  Modals from '@/components/Modals'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { uploadFile } from "@/utils/uploadFile";
 import { UserModel } from '@/models/User'
+import MobileButton from '@/components/MobileButton'
 
 const UserDashboard = () => {
 
     const { user } = useAuth()
     const [activeTab, setActiveTab] = useState('personalData')
     const [showAddressModal, setShowAddressModal] = useState(false)
+    const [showAddressModalEdit, setShowAddressModalEdit] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showUserProfileUpdateModal, setShowUserProfileUpdateModal] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -117,7 +119,7 @@ const UserDashboard = () => {
            
             const data = await response.json();
             setAddresses(data);
-            setShowAddressModal(true)
+            setShowAddressModalEdit(true)
             
         } catch (error) {
             console.error('Error updating address:', error);
@@ -273,7 +275,7 @@ const UserDashboard = () => {
             console.error('Error updating address:', error);
         } finally {
             setLoading(false);
-            setShowAddressModal(false);
+            setShowAddressModalEdit(false);
             setAddresses([
                 {
                   address: '',
@@ -446,15 +448,6 @@ const UserDashboard = () => {
     const handleSellerDashboard = () => {    
     router.push(`/seller-dashboard`)
     }
-
-    // const renderMobileDashboard = () => {
-    //     return(
-
-    //         <div>
-    //             <p className='text-2xl font-bold'> This is mobile view</p>
-    //         </div>
-    //     )
-    // }
       
     useEffect(() => {
         // Check window size on mount
@@ -634,12 +627,13 @@ const UserDashboard = () => {
             <div className='p-6'>
                 <div className='w-full flex flex-col gap-6'>
                     <div className='w-full flex justify-between text-xl'>
-                        <div>Find Address</div>
+                        <div className='mobile:text-sm mobile:p-2'>Find Address</div>
                         <PrimaryButton
                             type='button'
+                            className='mobile:border mobile:rounded-full mobile:text-sm'
                             onClick={() => {setShowAddressModal(true)}}
                         >
-                            Add New Address +
+                           {`${mobileView ? 'Add New Address' : 'Add New Address +'}`}
                         </PrimaryButton>
 
                         {showAddressModal && (
@@ -689,36 +683,70 @@ const UserDashboard = () => {
                                     <span>{address.contact}</span>
                                     <span>{address.address}</span>
                                 </div>
-                                <div className="w-full flex justify-end gap-3">
-                                    <PrimaryButton 
-                                        onClick={() => {
-                                            if (address?.id !== undefined) {
-                                                setUpdatingAddressId(address.id); // Set the updating address ID
-                                                setAsMain(address.id)
-                                            }
-                                        }}
-                                        type="button" 
-                                        className={address?.is_main ? 'btn-disabled' : ''} 
-                                        disabled={address?.is_main || updatingAddressId === address?.id} // Disable if already main or updating this address
-                                    >
-                                        {updatingAddressId === address?.id && loading
-                                            ? 'Loading...' 
-                                            : address?.is_main 
-                                                ? 'Main Address' 
-                                                : 'Set As Main'}
-                                    </PrimaryButton>
-                                    <PrimaryButton 
-                                        type="button"   
-                                        onClick={() => {
-                                            if (address?.id !== undefined) {
-                                                getAddressById(address.id);
-                                            } else {
-                                               enqueueSnackbar("Address not found.", { variant: "error" });
-                                            }
-                                        }}>
-                                        Change
-                                    </PrimaryButton>
-                                    {showAddressModal && (
+                                <div className="w-full flex justify-end gap-3 mobile:w-[120px] mx-auto mobile:justify-between mobile:mt-4">
+                                    {!mobileView ? (
+                                        <PrimaryButton
+                                            onClick={() => {
+                                                if (address?.id !== undefined) {
+                                                    setUpdatingAddressId(address.id); // Set the updating address ID
+                                                    setAsMain(address.id)
+                                                }
+                                            }}
+                                            type="button" 
+                                            className={address?.is_main ? 'btn-disabled mobile:text-sm mobile:border mobile:rounded-full' : ''} 
+                                            disabled={address?.is_main || updatingAddressId === address?.id} // Disable if already main or updating this address
+                                        >
+                                            {updatingAddressId === address?.id && loading
+                                                ? 'Loading...' 
+                                                : address?.is_main 
+                                                    ? 'Main Address' 
+                                                    : 'Set As Main'}
+                                        </PrimaryButton>
+                                    ) : (
+                                        <MobileButton
+                                            type="button"
+                                            // className='mobile:text-sm mobile:border mobile:rounded-full'
+                                            onClick={() => {
+                                                if (address?.id !== undefined) {
+                                                    setUpdatingAddressId(address.id); // Set the updating address ID
+                                                    setAsMain(address.id)
+                                                }
+                                            }}
+                                            disabled={address?.is_main || updatingAddressId === address?.id} // Disable if already main or updating this address
+                                            buttonFor='confirm'
+                                        /> 
+                                    )}
+                                    
+                                    {!mobileView ? (
+                                        <PrimaryButton 
+                                            type="button"
+                                            className='mobile:text-sm mobile:border mobile:rounded-full'
+                                            onClick={() => {
+                                                if (address?.id !== undefined) {
+                                                    getAddressById(address.id);
+                                                } else {
+                                                enqueueSnackbar("Address not found.", { variant: "error" });
+                                                }
+                                            }}>
+                                            Change
+                                         </PrimaryButton>
+                                    ) : (
+                                        <MobileButton
+                                            type="button"
+                                            // className='mobile:text-sm mobile:border mobile:rounded-full'
+                                            onClick={() => {
+                                                if (address?.id !== undefined) {
+                                                    getAddressById(address.id);
+                                                } else {
+                                                enqueueSnackbar("Address not found.", { variant: "error" });
+                                                }
+                                            }}
+                                            buttonFor='edit'
+                                        
+                                        />
+                                    )}
+                                    
+                                    {showAddressModalEdit && (
                                         <div className="modal-overlay">
                                             <div className="modal-content">
                                                 <div className="w-[506px] mx-auto flex flex-col gap-6 text-xl">                                                                                  
@@ -735,14 +763,14 @@ const UserDashboard = () => {
                                                              if (addressSelected?.id !== undefined) {
                                                                 updateAddress(addressSelected.id);
                                                             } else {
-                                                               enqueueSnackbar("Address not found.", { variant: "error" });
+                                                               enqueueSnackbar("Address not found from edit.", { variant: "error" });
                                                             }
                                                         }}>
                                                             {loading ? 'Loading...' : 'Submit'}
                                                         </PrimaryButton>
                                                         <SecondaryButton
                                                             onClick={() => {
-                                                                setShowAddressModal(false); 
+                                                                setShowAddressModalEdit(false); 
                                                                 setAddresses([
                                                                         {
                                                                             address: '',
@@ -762,17 +790,34 @@ const UserDashboard = () => {
                                             </div>
                                         </div>
                                         )}
-                                    <PrimaryButton 
-                                         onClick={() => {
-                                            if (address?.id !== undefined) {
-                                                getAddressToDelete(address.id);
-                                            } else {
-                                               enqueueSnackbar("Address not found.", { variant: "error" });
-                                            }
-                                        }}
-                                        type="button">
-                                            Delete
-                                    </PrimaryButton>
+                                    {!mobileView ? (
+                                        <PrimaryButton 
+                                            onClick={() => {
+                                                if (address?.id !== undefined) {
+                                                    getAddressToDelete(address.id);
+                                                } else {
+                                                    enqueueSnackbar("Address not found.", { variant: "error" });
+                                                }
+                                            }}
+                                            type="button">
+                                                Delete
+                                        </PrimaryButton>
+                                    ) : (
+                                        <MobileButton
+                                            type="button"
+                                            // className='mobile:text-sm mobile:border mobile:rounded-full'
+                                            onClick={() => {
+                                                if (address?.id !== undefined) {
+                                                    getAddressToDelete(address.id);
+                                                } else {
+                                                    enqueueSnackbar("Address not found.", { variant: "error" });
+                                                }
+                                            }}
+                                            buttonFor='delete'
+                                        
+                                        />
+                                    )}
+                                    
                                     {showDeleteModal && (
                                         <div className="modal-overlay">
                                             <div className="modal-content-flexible top-[40%]">

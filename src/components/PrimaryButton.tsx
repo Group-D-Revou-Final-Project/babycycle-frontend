@@ -1,5 +1,5 @@
 interface PrimaryButtonProps {
-    children: string,
+    children?: string,
     type: "submit" | "reset" | "button",
     onClick?: () => void,
     className?: string,
