@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { TransactionModel } from '@/models/Transactions'
 import { API_TRANSACTION, API_ADDRESSES, API_ADDRESSES_MAIN, API_PROFILE_IMAGE, API_UPDATE_PROFILE } from '@/constants/apis'
 import { useRouter } from 'next/navigation'
-import { convertDate } from "@/utils/formatDate";
+import { convertDate, formatToDDMMYYYY } from "@/utils/formatDate";
 import { SecondaryButton } from '@/components/SecondaryButton'
 import { enqueueSnackbar } from "notistack";
 import { AddressModel } from '@/models/Address'
@@ -467,7 +467,7 @@ const UserDashboard = () => {
         };
       }, [mobileView]);
 
-  return ( <div className='body-width mb-[72px] max-md:w-full max-md:px-8 mobile:w-[500px]'>
+  return ( <div className='body-width mb-[72px] max-md:w-full max-md:px-8 mobile:w-[500px] left-0'>
         <div className='w-full flex justify-between items-center'>
             <div className='py-6'>
                 <span className='text-3xl text-buttonBlue'>Hello, {user?.data.username!== null ? user?.data.username : 'You'}!</span>
@@ -639,7 +639,7 @@ const UserDashboard = () => {
                         {showAddressModal && (
                             <div className="modal-overlay">
                                 <div className="modal-content mobile:w-[300px] mobile:mt-[40%]">
-                                    <div className="w-[506px] mx-auto flex flex-col gap-6 text-xl mobile:text-sm mobile:w-[250px] mobile:gap-4">                                                                                  
+                                    <div className="w-[506px] mx-auto flex flex-col gap-6 text-xl mobile:text-sm mobile:w-auto mobile:gap-4">                                                                                  
                                         <Modals
                                             type='address'
                                             addresses={addresses}
@@ -752,7 +752,7 @@ const UserDashboard = () => {
                                     {showAddressModalEdit && (
                                         <div className="modal-overlay">
                                             <div className="modal-content mobile:w-[300px] mobile:mt-[40%]">
-                                                <div className="w-[506px] mx-auto flex flex-col gap-6 text-xl mobile:text-sm mobile:w-[250px] mobile:gap-4">                                                                                  
+                                                <div className="w-[506px] mx-auto flex flex-col gap-6 text-xl mobile:text-sm mobile:w-auto mobile:gap-4">                                                                                  
                                                     <Modals
                                                         type='address'
                                                         addresses={addresses}
@@ -869,34 +869,34 @@ const UserDashboard = () => {
                             </div>
 
                             <div className='w-full p-6 flex flex-col gap-8 border-4 border-borderGray rounded-xl text-xl'>
-                                <div className='w-full flex gap-8'>
-                                    <div className='w-[154px] h-[154px] bg-slate-200'>
+                                <div className='w-full flex gap-8 mobile:gap-4'>
+                                    <div className='w-[154px] h-[154px] bg-slate-200 mobile:hidden'>
                                         <img className='w-full h-full' src={transaction.image_url || "https://placehold.co/600x400"}
                                              alt="https://placehold.co/600x400"
                                         />
                                     </div>
 
                                     <div className='w-2/3 flex flex-col gap-2'>
-                                        <div className='w-full flex gap-4 items-center'>
-                                            <span>{convertDate(transaction.created_at)}</span>
+                                        <div className='w-full flex gap-4 items-center mobile:text-xs'>
+                                            <span>{mobileView ? formatToDDMMYYYY(transaction.created_at) : convertDate(transaction.created_at)}</span>
                                             <div className='w-auto h-auto p-2 bg-lighterBabyBlue text-buttonBlue text-xs text-center'>{transaction.status}</div>
                                         </div>
-                                        <span className='font-bold'>{transaction.name}</span>
-                                        <span className='font-bold'>quantity: {transaction.quantity}</span>
+                                        <span className='font-bold mobile:text-sm'>{transaction.name}</span>
+                                        <span className='font-bold mobile:text-sm'>quantity: {transaction.quantity}</span>
 
                                         <div className='w-full flex gap-3 items-center'>
                                             <img src='/Icon_shop.png'/>
-                                            <span className='text-buttonBlue'>{transaction.seller_details.name}</span>
+                                            <span className='text-buttonBlue mobile:text-sm'>{transaction.seller_details.name}</span>
                                         </div>
                                     </div>
 
-                                    <div className='w-1/4 flex flex-col justify-center gap-2'>
-                                        <span>Total payment</span>
-                                        <span className='font-bold'>{transaction.total_price.toLocaleString()}</span>
+                                    <div className='w-1/4 flex flex-col justify-center gap-2 mobile:text-sm mobile:w-1/2'>
+                                        <span>Total Payment</span>
+                                        <span className='font-bold'>{`Rp ${transaction.total_price.toLocaleString()}`}</span>
                                     </div>
                                 </div>
 
-                                <div className='w-full flex justify-end gap-3'>
+                                <div className='w-full flex justify-end gap-3 mobile:text-sm mobile:justify-center'>
                                     <PrimaryButton 
                                         type='button' 
                                         onClick={() => handleReviewPage(transaction.product_id, transaction.checkout_id)}
